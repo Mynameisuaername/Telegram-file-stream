@@ -15,8 +15,6 @@ class Var(object):
     BIN_CHANNEL = int(getenv('BIN_CHANNEL', None))     
     PORT = int(getenv('PORT', 8080))
     BIND_ADRESS = str(getenv('WEB_SERVER_BIND_ADDRESS', '0.0.0.0'))
-    HAS_SSL = getenv('HAS_SSL', False)
-    HAS_SSL = True if HAS_SSL.lower() == 'true' else False
     # OWNER_ID = int(getenv('OWNER_ID')) #TODO
     NO_PORT = getenv('NO_PORT', False)
     NO_PORT = True if NO_PORT.lower() == 'true' else False
@@ -26,7 +24,6 @@ class Var(object):
     else:
         ON_HEROKU = False
     FQDN = str(getenv('FQDN', BIND_ADRESS)) if not ON_HEROKU or getenv('FQDN') else APP_NAME+'.herokuapp.com'
-    if ON_HEROKU:
-        URL = f"https://{FQDN}/"     
-    else:
-        URL = "http{}://{}{}/".format('s' if HAS_SSL else '', FQDN, '' if NO_PORT else ':'+ str(PORT))
+    FQDN = str(getenv('FQDN', BIND_ADRESS)) if not ON_HEROKU or getenv('FQDN') else APP_NAME+'.herokuapp.com'
+    URL = "https://{}/".format(FQDN) if ON_HEROKU or NO_PORT else \
+        "http://{}:{}/".format(FQDN, PORT)
